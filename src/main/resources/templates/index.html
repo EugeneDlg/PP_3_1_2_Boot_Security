@@ -1,11 +1,56 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
-    <title>Spring Security Example</title>
+    <title>Welcome to Admin page</title>
 </head>
 <body>
-<h1>Welcome to Index PAGE!!!!</h1>
+<h2>Welcome to Admin page</h2>
+<H3>List of all users (Список всех пользователей)</H3>
+<div>
+    <table border="1">
+        <tr>
+            <th>Id</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Age</th>
+        </tr>
+        <tr th:each ="user : ${users}">
+            <td th:utext="${user.getId()}">...</td>
+            <td th:utext="${user.getUsername()}">...</td>
+            <td th:utext="${user.getEmail()}">...</td>
+            <td th:utext="${user.getAge}">...</td>
+        </tr>
+    </table>
+</div>
+<br>
+<div>
+    <H3>Create a new user</H3>
+</div>
+<br>
+<form th:method="POST" th:action="@{/admin/create}" th:object="${User}">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
+            <label for="username">Enter username:</label>
+            <input type="text" th:field="*{username}" id="username" required/>
+
+            <label for="password">Enter password:</label>
+            <input type="text" th:field="*{password}" id="password" required/>
+
+            <label>Roles:</label>
+            <div th:each="role: ${listRoles}" >
+                <input type="checkbox" th:field="*{roles}" th:id="${'roleCheckbox' + role.id}" th:value="${role.id}"
+                       class="form-check-input" />
+                <label th:for="${'roleCheckbox' + role.id}" th:text="${role.name}"></label>
+
+            <label for="email">Enter email:</label>
+            <input type="text" th:field="*{email}" id="email" required />
+
+        <button type="submit">Create</button>
+
+</form>
+
+<br>
+<a th:href="@{/logout}">Logout</a>
 
 </body>
 </html>

@@ -11,7 +11,6 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 import java.util.List;
 
 @Controller
-@RequestMapping("/index")
 public class UserController {
     private final UserService userService;
     private final RoleService roleService;
@@ -22,10 +21,23 @@ public class UserController {
     }
 
 //    @GetMapping("/")
+    public String welcome(ModelMap modelMap){
+        System.out.println("LLL. WELCOME");
+        return "welcome";
+    }
+    @GetMapping("/index")
     public String getUsers(ModelMap modelMap){
         List<User> userList = userService.getUsers();
         modelMap.addAttribute("userList", userList);
-        System.out.println("getUsers");
+        System.out.println("LLL. admin page");
         return "index";
+    }
+
+    @GetMapping("/user")
+    public String getUsers0(ModelMap modelMap){
+        List<User> userList = userService.getUsers();
+        modelMap.addAttribute("userList", userList);
+        System.out.println("LLL. user page");
+        return "user";
     }
 }
