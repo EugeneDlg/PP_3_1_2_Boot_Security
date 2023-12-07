@@ -63,7 +63,7 @@ public class AdminController {
         return "complete";
     }
 
-    @GetMapping(value = "/delete")
+    @PostMapping(value = "/delete")
     public String deleteUser(@RequestParam("id") Long id) {
         if (userService.getById(id).isEmpty()) {
             return "notfound";

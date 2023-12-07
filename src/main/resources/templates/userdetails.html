@@ -119,7 +119,10 @@
     </form>
 </table>
 <hr>
-<h4><a th:href="@{/admin/delete(id=${user.id})}">Delete user</a></h4>
+<form th:method="POST" th:action="@{/admin/delete(id=${user.id})}">
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+    Do you want to delete user?  <button type="submit" style="height:2rem; width:8rem; font-size: medium" >Delete user</button>
+</form>
 <a class="logout" th:href="@{/logout}">Logout</a>
 <a class="home" th:href="@{/admin/all}">Home</a>
 </body>
