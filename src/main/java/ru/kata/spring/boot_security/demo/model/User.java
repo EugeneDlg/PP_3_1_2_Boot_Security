@@ -13,14 +13,13 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
+    private Long id;
     @Column(name = "name", unique = true)
     private String username;
     private String password;
     private String email;
     private Integer age;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "roles_users",
             joinColumns = @JoinColumn(name = "users_id"),
@@ -32,8 +31,6 @@ public class User {
     }
 
     public User(String username, String password, String email, Integer age, List<Role> roles) {
-//        this.firstName = firstName;
-//        this.lastName = lastName;
         this.username = username;
         this.password = password;
         this.email = email;
@@ -41,16 +38,18 @@ public class User {
         this.roles = roles;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public String getUsername(){
+    public String getUsername() {
         return username;
     }
-    public String getPassword(){
+
+    public String getPassword() {
         return password;
     }
+
     public String getEmail() {
         return email;
     }
@@ -59,17 +58,18 @@ public class User {
         return age;
     }
 
-    public List<Role> getRoles(){
+    public List<Role> getRoles() {
         return roles;
     }
 
-
-    public void setUsername(String username){
+    public void setUsername(String username) {
         this.username = username;
     }
-    public void setPassword(String password){
+
+    public void setPassword(String password) {
         this.password = password;
     }
+
     public void setEmail(String email) {
         this.email = email;
     }
@@ -78,7 +78,7 @@ public class User {
         this.age = age;
     }
 
-    public void setRoles(List<Role> roles){
+    public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
 
@@ -100,7 +100,7 @@ public class User {
     @Override
     public String toString() {
         return "User: name=" + username
-                 + " email=" + email
+                + " email=" + email
                 + " age=" + age;
     }
 }

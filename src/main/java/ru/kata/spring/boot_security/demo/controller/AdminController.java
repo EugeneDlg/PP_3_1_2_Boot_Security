@@ -2,17 +2,14 @@ package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin")
@@ -24,35 +21,55 @@ public class AdminController {
         this.userService = userService;
         this.roleService = roleService;
     }
-    @GetMapping(value="/getall")
-    public String getUsers(ModelMap modelMap){
+
+    @GetMapping(value = "/all")
+    public String getUsers(@ModelAttribute("user") User user, ModelMap modelMap) {
         List<User> users = userService.getUsers();
-        System.out.printf("Controller getall users" + users.size());
-        List<Role> roles = roleService.getRoles();
-        System.out.printf("Controller getall roles" + roles.size());
+        List<Role> roleList = roleService.getRoles();
         modelMap.addAttribute("users", users);
-        modelMap.addAttribute("roles", roles);
-        modelMap.addAttribute("listRoles", List.of("User", "Admin"));
-        System.out.println("LLL. admin getall");
+        modelMap.addAttribute("roleList", roleList);
         return "index";
     }
 
+    @GetMapping(value = "/userdetails")
+    public String getUser(@RequestParam("id") Long id, ModelMap modelMap) {
+        Optional<User> user = userService.getByIdForUpdate(id);
+        if (user.isEmpty()) {
+            return "notfound";
+        }
+        List<Role> roleList = roleService.getRoles();
+        modelMap.addAttribute("user", user.get());
+        modelMap.addAttribute("roleList", roleList);
+        return "userdetails";
+    }
+
     @PostMapping(value = "/create")
-    public String createUser(@ModelAttribute("User") User user, ModelMap modelMap){
+    public String createUser(@ModelAttribute("user") User user) {
         userService.addUser(user);
-        return "welcome";
+        return "complete";
     }
 
-    @GetMapping(value="/")
-    public String adminHome(){
-        System.out.println("LLL. admin home");
-        return "forward:/admin/getall";
+    @GetMapping(value = "")
+    public String adminHome() {
+        return "forward:/admin/all";
     }
 
-    @GetMapping(value="")
-    public String adminHome_(){
-        System.out.println("LLL. admin home");
-        return "forward:/admin/getall";
+    @PostMapping(value = "/update")
+    public String updateUser(@ModelAttribute("user") User user, @RequestParam("id") Long id) {
+        if (userService.getById(id).isEmpty()) {
+            return "notfound";
+        }
+        userService.updateUser(id, user);
+        return "complete";
+    }
+
+    @GetMapping(value = "/delete")
+    public String deleteUser(@RequestParam("id") Long id) {
+        if (userService.getById(id).isEmpty()) {
+            return "notfound";
+        }
+        userService.deleteUser(id);
+        return "complete";
     }
 
 }

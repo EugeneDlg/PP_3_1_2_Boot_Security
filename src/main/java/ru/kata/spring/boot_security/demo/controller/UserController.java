@@ -5,39 +5,27 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
-import java.util.List;
+import java.security.Principal;
+import java.util.Optional;
 
 @Controller
+@RequestMapping("/user")
 public class UserController {
     private final UserService userService;
-    private final RoleService roleService;
 
-    public UserController(UserService userService, RoleService roleService) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.roleService = roleService;
     }
 
-//    @GetMapping("/")
-    public String welcome(ModelMap modelMap){
-        System.out.println("LLL. WELCOME");
-        return "welcome";
-    }
-    @GetMapping("/index")
-    public String getUsers(ModelMap modelMap){
-        List<User> userList = userService.getUsers();
-        modelMap.addAttribute("userList", userList);
-        System.out.println("LLL. admin page");
-        return "index";
-    }
-
-    @GetMapping("/user")
-    public String getUsers0(ModelMap modelMap){
-        List<User> userList = userService.getUsers();
-        modelMap.addAttribute("userList", userList);
-        System.out.println("LLL. user page");
+    @GetMapping("")
+    public String getUser(ModelMap modelMap, Principal principal) {
+        Optional<User> user = userService.getByUsername(principal.getName());
+        if (user.isEmpty()) {
+            return "notfound";
+        }
+        modelMap.addAttribute("user", user.get());
         return "user";
     }
 }

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User details:</title>
+    <script>
+        function hidePassword() {
+            var x = document.getElementById("userPassword");
+            if (x.type === "password") {
+                x.type = "text";
+            } else {
+                x.type = "password";
+            }
+        }
+    </script>
+    <style>
+        th, td {
+            padding: 12px;
+        }
+        .logout {
+            position: absolute;
+            top: 0.5rem;
+            right: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .home {
+            position: absolute;
+            top: 2.5rem;
+            right: 1rem;
+            font-size: 1.25rem;
+        }
+    </style>
+</head>
+<body>
+<h3>User details:</h3>
+<table border="1">
+    <tr>
+        <td>
+            Id:
+        </td>
+        <td th:utext="${user.id}">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            User name:
+        </td>
+        <td th:utext="${user.username}">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Email:
+        </td>
+        <td th:utext="${user.email}">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            User name:
+        </td>
+        <td th:utext="${user.age}">
+        </td>
+    </tr>
+</table>
+<hr>
+<h4>Update user data:</h4>
+<table>
+    <form th:method="POST" th:action="@{/admin/update(id=${user.id})}" th:object="${user}">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        <tr>
+            <td>
+                <label for="username">Enter username:</label>
+            </td>
+            <td>
+                <input type="text" th:field="*{username}" id="username" required/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="userPassword">Enter password:</label>
+            </td>
+            <td>
+                <input type="password" id="userPassword" th:field="*{password}" required/>
+                <input type="checkbox" onclick="hidePassword()">Show
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="email">Enter email:</label>
+            </td>
+            <td>
+                <input type="text" th:field="*{email}" id="email" required />
+            </td>
+        <tr>
+            <td>
+                <label for="age">Enter age:</label>
+            </td>
+            <td>
+                <input type="text" th:field="*{age}" id="age" required />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label>Roles:</label>
+            </td>
+            <td th:each="role: ${roleList}" >
+                <input type="checkbox" th:field="*{roles}" th:id="${'roleCheckbox' + role.id}" th:value="${role.id}"
+                       class="form-check-input" />
+                <label th:for="${'roleCheckbox' + role.id}" th:text="${role.roleName}"></label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button type="submit" style="height:2rem; width:4rem; font-size: medium" >Update</button>
+            </td>
+        </tr>
+    </form>
+</table>
+<hr>
+<h4><a th:href="@{/admin/delete(id=${user.id})}">Delete user</a></h4>
+<a class="logout" th:href="@{/logout}">Logout</a>
+<a class="home" th:href="@{/admin/all}">Home</a>
+</body>
+</html>

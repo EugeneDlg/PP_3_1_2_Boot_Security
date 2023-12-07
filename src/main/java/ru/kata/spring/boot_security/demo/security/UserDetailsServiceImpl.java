@@ -6,8 +6,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.repository.UserRepository;
 import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
 import java.util.stream.Collectors;
 
@@ -20,15 +20,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username).orElseThrow(()
-                -> new UsernameNotFoundException("The user with this username not found"));
-        System.out.println("LLL. username: " + user.getUsername());
-        System.out.println("LLL. roles size: " + user.getRoles().get(0).getRoleName());
-
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new UsernameNotFoundException("The user with this username not found"));
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
-                user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getRoleName())).collect(Collectors.toList()));
+                user.getRoles().stream().map(
+                        role -> new SimpleGrantedAuthority(role.getRoleName())).collect(Collectors.toList()));
     }
 }
