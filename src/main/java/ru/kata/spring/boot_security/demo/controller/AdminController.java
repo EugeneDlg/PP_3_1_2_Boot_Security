@@ -34,7 +34,7 @@ public class AdminController {
     @GetMapping(value = "/userdetails")
     public String getUser(@RequestParam("id") Long id, ModelMap modelMap) {
         Optional<User> user = userService.getByIdForUpdate(id);
-        if (user.isEmpty()) {
+        if (id == null  || user.isEmpty()) {
             return "notfound";
         }
         List<Role> roleList = roleService.getRoles();
@@ -56,7 +56,7 @@ public class AdminController {
 
     @PostMapping(value = "/update")
     public String updateUser(@ModelAttribute("user") User user, @RequestParam("id") Long id) {
-        if (userService.getById(id).isEmpty()) {
+        if (id == null  || userService.getById(id).isEmpty()) {
             return "notfound";
         }
         userService.updateUser(id, user);
@@ -65,7 +65,7 @@ public class AdminController {
 
     @PostMapping(value = "/delete")
     public String deleteUser(@RequestParam("id") Long id) {
-        if (userService.getById(id).isEmpty()) {
+        if (id == null  || userService.getById(id).isEmpty()) {
             return "notfound";
         }
         userService.deleteUser(id);

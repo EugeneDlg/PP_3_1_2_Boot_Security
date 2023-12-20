@@ -63,6 +63,13 @@
         <td th:utext="${user.age}">
         </td>
     </tr>
+    <tr>
+        <td>
+            Roles:
+        </td>
+        <td th:each="role : ${user.roles}"
+            th:utext="${role.roleName.replaceFirst('ROLE_', '  ')}">...</td>
+    </tr>
 </table>
 <hr>
 <h4>Update user data:</h4>
@@ -98,7 +105,7 @@
                 <label for="age">Enter age:</label>
             </td>
             <td>
-                <input type="text" th:field="*{age}" id="age" required />
+                <input type="number" min="0" max="120" th:field="*{age}" id="age" required />
             </td>
         </tr>
         <tr>

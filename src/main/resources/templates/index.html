@@ -19,7 +19,7 @@
         }
     </script>
     <style>
-        .pointer {cursor: pointer;}
+        .pointer:hover {cursor: pointer; color:blue; }
         th, td {
             padding: 12px;
         }
@@ -49,12 +49,15 @@
             <th>Username</th>
             <th>Email</th>
             <th>Age</th>
+            <th>Roles</th>
         </tr>
         <tr class='clickable-row pointer' th:attr="data-href=@{/admin/userdetails(id=${user.id})}" th:each="user : ${users}">
             <td th:utext="${user.id}">...</td>
             <td th:utext="${user.username}">...</td>
             <td th:utext="${user.email}">...</td>
             <td th:utext="${user.age}">...</td>
+            <td th:each="role : ${user.roles}"
+                th:utext="${role.roleName.replaceFirst('ROLE_', '  ')}">...</td>
         </tr>
     </table>
 </div>
@@ -96,7 +99,7 @@
                 <label for="age">Enter age:</label>
             </td>
             <td>
-                <input type="text" th:field="*{age}" id="age" required />
+                <input type="number" min="0" max="120" th:field="*{age}" id="age" required />
             </td>
         </tr>
         <tr>
